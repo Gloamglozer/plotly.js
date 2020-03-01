@@ -52,53 +52,38 @@ This layout and trace pair should function very similarly to the cartesian layou
     Type: data array
     Assigns id labels to each datum. These ids for object constancy of data points during animation. Should be an array of strings, not numbers or any other type.
 
-### Attributes that will be removed or changed
-
--   x
-    Parent: data[type=scattersmith]
-    Type: data array
-    Sets the x coordinates.
-
--   x0
-    Parent: data[type=scattersmith]
-    Type: number or categorical coordinate string
-    Default: 0
-    Alternate to `x`. Builds a linear space of x coordinates. Use with `dx` where `x0` is the starting coordinate and `dx` the step.
-
--   dx
-    Parent: data[type=scattersmith]
-    Type: number
-    Default: 1
-    Sets the x coordinate step. See `x0` for more info.
-
--   y
-    Parent: data[type=scattersmith]
-    Type: data array
-    Sets the y coordinates.
-
--   y0
-    Parent: data[type=scattersmith]
-    Type: number or categorical coordinate string
-    Default: 0
-    Alternate to `y`. Builds a linear space of y coordinates. Use with `dy` where `y0` is the starting coordinate and `dy` the step.
-
--   dy
-    Parent: data[type=scattersmith]
-    Type: number
-    Default: 1
-    Sets the y coordinate step. See `y0` for more info.
-
 -   text
     Parent: data[type=scattersmith]
     Type: string or array of strings
     Default: ""
-    Sets text elements associated with each (x,y) pair. If a single string, the same string appears over all the data points. If an array of string, the items are mapped in order to the this trace's (x,y) coordinates. If trace `hoverinfo` contains a "text" flag and "hovertext" is not set, these elements will be seen in the hover labels.
+    Sets text elements associated with each impedance point. If a single string, the same string appears over all the data points. If an array of string, the items are mapped in order to each impedance in the trace. If trace `hoverinfo` contains a "text" flag and "hovertext" is not set, these elements will be seen in the hover labels.
 
 -   textposition
     Parent: data[type=scattersmith]
     Type: enumerated or array of enumerateds , one of ( "top left" | "top center" | "top right" | "middle left" | "middle center" | "middle right" | "bottom left" | "bottom center" | "bottom right" )
     Default: "middle center"
-    Sets the positions of the `text` elements with respects to the (x,y) coordinates.
+    Sets the positions of the `text` elements with respect to the impedance point.
+
+### Attributes that will be removed or changed
+
+-   ~~x~~ z_ohms_re
+    Parent: data[type=scattersmith]
+    Type: data array
+    Sets the real part of a non-normalized impedance trace.
+
+-   ~~x0~~
+
+-   ~~dx~~
+
+-   ~~y~~ z_ohms_im
+    Parent: data[type=scattersmith]
+    Type: data array
+    Sets the imaginary part of a non-normalized impedance trace.
+
+-   ~~y0~~
+
+-   ~~dy~~
+
 
 -   texttemplate
     Parent: data[type=scattersmith]
@@ -689,7 +674,7 @@ This layout and trace pair should function very similarly to the cartesian layou
     Type: data array
     Sets the data corresponding the length of each error bar. Values are plotted relative to the underlying data.
 
-    arrayminus
+-   arrayminus
     Parent: data[type=scattersmith].error_x
     Type: data array
     Sets the data corresponding the length of each error bar in the bottom (left) direction for vertical (horizontal) bars Values are plotted relative to the underlying data.
@@ -946,7 +931,7 @@ This layout and trace pair should function very similarly to the cartesian layou
     Default: "gregorian"
     Sets the calendar system to use with `y` date data.
 
-    uirevision
+-   uirevision
     Parent: data[type=scattersmith]
     Type: number or categorical coordinate string
     Controls persistence of some user-driven changes to the trace: `constraintrange` in `parcoords` traces, as well as some `editable: true` modifications such as `name` and `colorbar.title`. Defaults to `layout.uirevision`. Note that other user-driven trace attribute changes are controlled by `layout` attributes: `trace.visible` is controlled by `layout.legend.uirevision`, `selectedpoints` is controlled by `layout.selectionrevision`, and `colorbar.(x|y)` (accessible with `config: {editable: true}`) is controlled by `layout.editrevision`. Trace changes are tracked by `uid`, which only falls back on trace index if no `uid` is provided. So if your app can add/remove traces before the end of the `data` array, such that the same trace has a different index, you can still preserve user-driven changes if you give each trace a `uid` that stays with it as it moves.
