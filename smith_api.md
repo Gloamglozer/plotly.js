@@ -66,41 +66,54 @@ This layout and trace pair should function very similarly to the cartesian layou
 
 ### Attributes that will be removed or changed
 
--   ~~x~~ z_ohms_re
-    Parent: data[type=scattersmith]
-    Type: data array
-    Sets the real part of a non-normalized impedance trace.
+-   ~~x~~ 
 
 -   ~~x0~~
 
 -   ~~dx~~
 
--   ~~y~~ z_ohms_im
-    Parent: data[type=scattersmith]
-    Type: data array
-    Sets the imaginary part of a non-normalized impedance trace.
+-   ~~y~~ 
 
 -   ~~y0~~
 
 -   ~~dy~~
 
+### Attributes to be added
+
+-   z
+    Parent: data[type=scattersmith]
+    Type: array of math.Complex objects
+    An array of non-normalized impedances, in Ohms.
+
+-   s
+    Parent: data[type=scattersmith]
+    Type: array of math.Complex objects
+    An array of S-parameters.  Referenced to `z0` Ohms.
+
+-   z0
+    Parent: data[type=scattersmith]
+    Type: number
+    Default: 50
+    Resistance which `s` is referenced to. 
+
+### Not yet looked at... 
 
 -   texttemplate
     Parent: data[type=scattersmith]
     Type: string or array of strings
     Default: ""
-    Template string used for rendering the information text that appear on points. Note that this will override `textinfo`. Variables are inserted using %{variable}, for example "y: %{y}". Numbers are formatted using d3-format's syntax %{variable:d3-format}, for example "Price: %{y:$.2f}". https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md#d3_format for details on the formatting syntax. Dates are formatted using d3-time-format's syntax %{variable|d3-time-format}, for example "Day: %{2019-01-01|%A}". https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Formatting.md#format for details on the date formatting syntax. Every attributes that can be specified per-point (the ones that are `arrayOk: true`) are available.
+    Template string used for rendering the information text that appear on points. Note that this will override `textinfo`. Variables are inserted using %{variable}, for example "z_im: %{z_im}". Numbers are formatted using d3-format's syntax %{variable:d3-format}, for example "Real Part: %{z_re:$.2f}". https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md#d3_format for details on the formatting syntax. Every attributes that can be specified per-point (the ones that are `arrayOk: true`) are available.
 
 -   hovertext
     Parent: data[type=scattersmith]
     Type: string or array of strings
     Default: ""
-    Sets hover text elements associated with each (x,y) pair. If a single string, the same string appears over all the data points. If an array of string, the items are mapped in order to the this trace's (x,y) coordinates. To be seen, trace `hoverinfo` must contain a "text" flag.
+    Sets hover text elements associated with each impedance. If a single string, the same string appears over all the data points. If an array of string, the items are mapped in order to this trace's impedances. To be seen, trace `hoverinfo` must contain a "text" flag.
 
 -   hoverinfo
     Parent: data[type=scattersmith]
-    Type: flaglist string. Any combination of "x", "y", "z", "text", "name" joined with a "+" OR "all" or "none" or "skip".
-    Examples: "x", "y", "x+y", "x+y+z", "all"
+    Type: flaglist string. Any combination of "z", "text", "name" joined with a "+" OR "all" or "none" or "skip".
+    Examples:  "z", "all"
     Default: "all"
     Determines which trace information appear on hover. If `none` or `skip` are set, no information is displayed upon hovering. But, if `none` is set, click and hover events are still fired.
 
@@ -152,54 +165,55 @@ This layout and trace pair should function very similarly to the cartesian layou
 -   marker
     Parent: data[type=scattersmith]
     Type: object containing one or more of the keys listed below.
-    symbol
-    Parent: data[type=scattersmith].marker
-    Type: enumerated or array of enumerateds , one of ( "0" | "circle" | "100" | "circle-open" | "200" | "circle-dot" | "300" | "circle-open-dot" | "1" | "square" | "101" | "square-open" | "201" | "square-dot" | "301" | "square-open-dot" | "2" | "diamond" | "102" | "diamond-open" | "202" | "diamond-dot" | "302" | "diamond-open-dot" | "3" | "cross" | "103" | "cross-open" | "203" | "cross-dot" | "303" | "cross-open-dot" | "4" | "x" | "104" | "x-open" | "204" | "x-dot" | "304" | "x-open-dot" | "5" | "triangle-up" | "105" | "triangle-up-open" | "205" | "triangle-up-dot" | "305" | "triangle-up-open-dot" | "6" | "triangle-down" | "106" | "triangle-down-open" | "206" | "triangle-down-dot" | "306" | "triangle-down-open-dot" | "7" | "triangle-left" | "107" | "triangle-left-open" | "207" | "triangle-left-dot" | "307" | "triangle-left-open-dot" | "8" | "triangle-right" | "108" | "triangle-right-open" | "208" | "triangle-right-dot" | "308" | "triangle-right-open-dot" | "9" | "triangle-ne" | "109" | "triangle-ne-open" | "209" | "triangle-ne-dot" | "309" | "triangle-ne-open-dot" | "10" | "triangle-se" | "110" | "triangle-se-open" | "210" | "triangle-se-dot" | "310" | "triangle-se-open-dot" | "11" | "triangle-sw" | "111" | "triangle-sw-open" | "211" | "triangle-sw-dot" | "311" | "triangle-sw-open-dot" | "12" | "triangle-nw" | "112" | "triangle-nw-open" | "212" | "triangle-nw-dot" | "312" | "triangle-nw-open-dot" | "13" | "pentagon" | "113" | "pentagon-open" | "213" | "pentagon-dot" | "313" | "pentagon-open-dot" | "14" | "hexagon" | "114" | "hexagon-open" | "214" | "hexagon-dot" | "314" | "hexagon-open-dot" | "15" | "hexagon2" | "115" | "hexagon2-open" | "215" | "hexagon2-dot" | "315" | "hexagon2-open-dot" | "16" | "octagon" | "116" | "octagon-open" | "216" | "octagon-dot" | "316" | "octagon-open-dot" | "17" | "star" | "117" | "star-open" | "217" | "star-dot" | "317" | "star-open-dot" | "18" | "hexagram" | "118" | "hexagram-open" | "218" | "hexagram-dot" | "318" | "hexagram-open-dot" | "19" | "star-triangle-up" | "119" | "star-triangle-up-open" | "219" | "star-triangle-up-dot" | "319" | "star-triangle-up-open-dot" | "20" | "star-triangle-down" | "120" | "star-triangle-down-open" | "220" | "star-triangle-down-dot" | "320" | "star-triangle-down-open-dot" | "21" | "star-square" | "121" | "star-square-open" | "221" | "star-square-dot" | "321" | "star-square-open-dot" | "22" | "star-diamond" | "122" | "star-diamond-open" | "222" | "star-diamond-dot" | "322" | "star-diamond-open-dot" | "23" | "diamond-tall" | "123" | "diamond-tall-open" | "223" | "diamond-tall-dot" | "323" | "diamond-tall-open-dot" | "24" | "diamond-wide" | "124" | "diamond-wide-open" | "224" | "diamond-wide-dot" | "324" | "diamond-wide-open-dot" | "25" | "hourglass" | "125" | "hourglass-open" | "26" | "bowtie" | "126" | "bowtie-open" | "27" | "circle-cross" | "127" | "circle-cross-open" | "28" | "circle-x" | "128" | "circle-x-open" | "29" | "square-cross" | "129" | "square-cross-open" | "30" | "square-x" | "130" | "square-x-open" | "31" | "diamond-cross" | "131" | "diamond-cross-open" | "32" | "diamond-x" | "132" | "diamond-x-open" | "33" | "cross-thin" | "133" | "cross-thin-open" | "34" | "x-thin" | "134" | "x-thin-open" | "35" | "asterisk" | "135" | "asterisk-open" | "36" | "hash" | "136" | "hash-open" | "236" | "hash-dot" | "336" | "hash-open-dot" | "37" | "y-up" | "137" | "y-up-open" | "38" | "y-down" | "138" | "y-down-open" | "39" | "y-left" | "139" | "y-left-open" | "40" | "y-right" | "140" | "y-right-open" | "41" | "line-ew" | "141" | "line-ew-open" | "42" | "line-ns" | "142" | "line-ns-open" | "43" | "line-ne" | "143" | "line-ne-open" | "44" | "line-nw" | "144" | "line-nw-open" )
-    Default: "circle"
-    Sets the marker symbol type. Adding 100 is equivalent to appending "-open" to a symbol name. Adding 200 is equivalent to appending "-dot" to a symbol name. Adding 300 is equivalent to appending "-open-dot" or "dot-open" to a symbol name.
 
--   opacity
-    Parent: data[type=scattersmith].marker
-    Type: number or array of numbers between or equal to 0 and 1
-    Sets the marker opacity.
+    -   symbol
+        Parent: data[type=scattersmith].marker
+        Type: enumerated or array of enumerateds , one of ( "0" | "circle" | "100" | "circle-open" | "200" | "circle-dot" | "300" | "circle-open-dot" | "1" | "square" | "101" | "square-open" | "201" | "square-dot" | "301" | "square-open-dot" | "2" | "diamond" | "102" | "diamond-open" | "202" | "diamond-dot" | "302" | "diamond-open-dot" | "3" | "cross" | "103" | "cross-open" | "203" | "cross-dot" | "303" | "cross-open-dot" | "4" | "x" | "104" | "x-open" | "204" | "x-dot" | "304" | "x-open-dot" | "5" | "triangle-up" | "105" | "triangle-up-open" | "205" | "triangle-up-dot" | "305" | "triangle-up-open-dot" | "6" | "triangle-down" | "106" | "triangle-down-open" | "206" | "triangle-down-dot" | "306" | "triangle-down-open-dot" | "7" | "triangle-left" | "107" | "triangle-left-open" | "207" | "triangle-left-dot" | "307" | "triangle-left-open-dot" | "8" | "triangle-right" | "108" | "triangle-right-open" | "208" | "triangle-right-dot" | "308" | "triangle-right-open-dot" | "9" | "triangle-ne" | "109" | "triangle-ne-open" | "209" | "triangle-ne-dot" | "309" | "triangle-ne-open-dot" | "10" | "triangle-se" | "110" | "triangle-se-open" | "210" | "triangle-se-dot" | "310" | "triangle-se-open-dot" | "11" | "triangle-sw" | "111" | "triangle-sw-open" | "211" | "triangle-sw-dot" | "311" | "triangle-sw-open-dot" | "12" | "triangle-nw" | "112" | "triangle-nw-open" | "212" | "triangle-nw-dot" | "312" | "triangle-nw-open-dot" | "13" | "pentagon" | "113" | "pentagon-open" | "213" | "pentagon-dot" | "313" | "pentagon-open-dot" | "14" | "hexagon" | "114" | "hexagon-open" | "214" | "hexagon-dot" | "314" | "hexagon-open-dot" | "15" | "hexagon2" | "115" | "hexagon2-open" | "215" | "hexagon2-dot" | "315" | "hexagon2-open-dot" | "16" | "octagon" | "116" | "octagon-open" | "216" | "octagon-dot" | "316" | "octagon-open-dot" | "17" | "star" | "117" | "star-open" | "217" | "star-dot" | "317" | "star-open-dot" | "18" | "hexagram" | "118" | "hexagram-open" | "218" | "hexagram-dot" | "318" | "hexagram-open-dot" | "19" | "star-triangle-up" | "119" | "star-triangle-up-open" | "219" | "star-triangle-up-dot" | "319" | "star-triangle-up-open-dot" | "20" | "star-triangle-down" | "120" | "star-triangle-down-open" | "220" | "star-triangle-down-dot" | "320" | "star-triangle-down-open-dot" | "21" | "star-square" | "121" | "star-square-open" | "221" | "star-square-dot" | "321" | "star-square-open-dot" | "22" | "star-diamond" | "122" | "star-diamond-open" | "222" | "star-diamond-dot" | "322" | "star-diamond-open-dot" | "23" | "diamond-tall" | "123" | "diamond-tall-open" | "223" | "diamond-tall-dot" | "323" | "diamond-tall-open-dot" | "24" | "diamond-wide" | "124" | "diamond-wide-open" | "224" | "diamond-wide-dot" | "324" | "diamond-wide-open-dot" | "25" | "hourglass" | "125" | "hourglass-open" | "26" | "bowtie" | "126" | "bowtie-open" | "27" | "circle-cross" | "127" | "circle-cross-open" | "28" | "circle-x" | "128" | "circle-x-open" | "29" | "square-cross" | "129" | "square-cross-open" | "30" | "square-x" | "130" | "square-x-open" | "31" | "diamond-cross" | "131" | "diamond-cross-open" | "32" | "diamond-x" | "132" | "diamond-x-open" | "33" | "cross-thin" | "133" | "cross-thin-open" | "34" | "x-thin" | "134" | "x-thin-open" | "35" | "asterisk" | "135" | "asterisk-open" | "36" | "hash" | "136" | "hash-open" | "236" | "hash-dot" | "336" | "hash-open-dot" | "37" | "y-up" | "137" | "y-up-open" | "38" | "y-down" | "138" | "y-down-open" | "39" | "y-left" | "139" | "y-left-open" | "40" | "y-right" | "140" | "y-right-open" | "41" | "line-ew" | "141" | "line-ew-open" | "42" | "line-ns" | "142" | "line-ns-open" | "43" | "line-ne" | "143" | "line-ne-open" | "44" | "line-nw" | "144" | "line-nw-open" )
+        Default: "circle"
+        Sets the marker symbol type. Adding 100 is equivalent to appending "-open" to a symbol name. Adding 200 is equivalent to appending "-dot" to a symbol name. Adding 300 is equivalent to appending "-open-dot" or "dot-open" to a symbol name.
 
--   size
-    Parent: data[type=scattersmith].marker
-    Type: number or array of numbers greater than or equal to 0
-    Default: 6
-    Sets the marker size (in px).
+    -   opacity
+        Parent: data[type=scattersmith].marker
+        Type: number or array of numbers between or equal to 0 and 1
+        Sets the marker opacity.
 
--   maxdisplayed
-    Parent: data[type=scattersmith].marker
-    Type: number greater than or equal to 0
-    Default: 0
-    Sets a maximum number of points to be drawn on the graph. "0" corresponds to no limit.
+    -   size
+        Parent: data[type=scattersmith].marker
+        Type: number or array of numbers greater than or equal to 0
+        Default: 6
+        Sets the marker size (in px).
 
--   sizeref
-    Parent: data[type=scattersmith].marker
-    Type: number
-    Default: 1
-    Has an effect only if `marker.size` is set to a numerical array. Sets the scale factor used to determine the rendered size of marker points. Use with `sizemin` and `sizemode`.
+    -   maxdisplayed
+        Parent: data[type=scattersmith].marker
+        Type: number greater than or equal to 0
+        Default: 0
+        Sets a maximum number of points to be drawn on the graph. "0" corresponds to no limit.
 
--   sizemin
-    Parent: data[type=scattersmith].marker
-    Type: number greater than or equal to 0
-    Default: 0
-    Has an effect only if `marker.size` is set to a numerical array. Sets the minimum size (in px) of the rendered marker points.
+    -   sizeref
+        Parent: data[type=scattersmith].marker
+        Type: number
+        Default: 1
+        Has an effect only if `marker.size` is set to a numerical array. Sets the scale factor used to determine the rendered size of marker points. Use with `sizemin` and `sizemode`.
 
--   sizemode
-    Parent: data[type=scattersmith].marker
-    Type: enumerated , one of ( "diameter" | "area" )
-    Default: "diameter"
-    Has an effect only if `marker.size` is set to a numerical array. Sets the rule for which the data in `size` is converted to pixels.
+    -   sizemin
+        Parent: data[type=scattersmith].marker
+        Type: number greater than or equal to 0
+        Default: 0
+        Has an effect only if `marker.size` is set to a numerical array. Sets the minimum size (in px) of the rendered marker points.
 
--   line
-    Parent: data[type=scattersmith].marker
-    Type: object containing one or more of the keys listed below.
-    width
-    Parent: data[type=scattersmith].marker.line
-    Type: number or array of numbers greater than or equal to 0
-    Sets the width (in px) of the lines bounding the marker points.
+    -   sizemode
+        Parent: data[type=scattersmith].marker
+        Type: enumerated , one of ( "diameter" | "area" )
+        Default: "diameter"
+        Has an effect only if `marker.size` is set to a numerical array. Sets the rule for which the data in `size` is converted to pixels.
+
+    -   line
+        Parent: data[type=scattersmith].marker
+        Type: object containing one or more of the keys listed below.
+        width
+        Parent: data[type=scattersmith].marker.line
+        Type: number or array of numbers greater than or equal to 0
+        Sets the width (in px) of the lines bounding the marker points.
 
 -   color
     Parent: data[type=scattersmith].marker.line
