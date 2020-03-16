@@ -99,11 +99,31 @@ type: 'scattersmith'
   
 -   ~~dy~~  
 
+-   ~~xaxis~~  
+
+-   ~~yaxis~~  
+
 -   ~~error_x~~
 
 -   ~~error_y~~
 
 -   ~~cliponaxis~~  
+
+-   ~~xcalendar~~   
+
+-   ~~ycalendar~~   
+
+-   ~~fill~~   
+
+-   ~~fillcolor~~   
+
+-   ~~hoveron~~ No fill option
+
+-   ~~orientation~~ 
+
+-   ~~groupnorm~~ 
+
+-   ~~stackgroup~~ 
 
 ### Attributes to be added  
   
@@ -164,35 +184,6 @@ type: 'scattersmith'
     Parent: data[type=scattersmith]  
     Type: data array  
     Assigns extra data each datum. This may be useful when listening to hover, click and selection events. Note that, "scattersmith" traces also appends customdata items in the markers DOM elements  
-  
--   xaxis  
-    Parent: data[type=scattersmith]  
-    Type: subplotid  
-    Default: x  
-    Sets a reference between this trace's x coordinates and a 2D cartesian x axis. If "x" (the default value), the x coordinates refer to `layout.xaxis`. If "x2", the x coordinates refer to `layout.xaxis2`, and so on.  
-  
--   yaxis  
-    Parent: data[type=scattersmith]  
-    Type: subplotid  
-    Default: y  
-    Sets a reference between this trace's y coordinates and a 2D cartesian y axis. If "y" (the default value), the y coordinates refer to `layout.yaxis`. If "y2", the y coordinates refer to `layout.yaxis2`, and so on.  
-  
--   orientation  
-    Parent: data[type=scattersmith]  
-    Type: enumerated , one of ( "v" | "h" )  
-    Only relevant when `stackgroup` is used, and only the first `orientation` found in the `stackgroup` will be used - including if `visible` is "legendonly" but not if it is `false`. Sets the stacking direction. With "v" ("h"), the y (x) values of subsequent traces are added. Also affects the default value of `fill`.  
-  
--   groupnorm  
-    Parent: data[type=scattersmith]  
-    Type: enumerated , one of ( "" | "fraction" | "percent" )  
-    Default: ""  
-    Only relevant when `stackgroup` is used, and only the first `groupnorm` found in the `stackgroup` will be used - including if `visible` is "legendonly" but not if it is `false`. Sets the normalization for the sum of this `stackgroup`. With "fraction", the value of each trace at each location is divided by the sum of all trace values at that location. "percent" is the same but multiplied by 100 to show percentages. If there are multiple subplots, or multiple `stackgroup`s on one subplot, each will be normalized within its own set.  
-  
--   stackgroup  
-    Parent: data[type=scattersmith]  
-    Type: string  
-    Default: ""  
-    Set several scattersmith traces (on the same subplot) to the same stackgroup in order to add their y values (or their x values if `orientation` is "h"). If blank or omitted this trace will not be stacked. Stacking also turns `fill` on by default, using "tonexty" ("tonextx") if `orientation` is "h" ("v") and sets the default `mode` to "lines" irrespective of point count. You can only stack on a numeric (linear or log) axis. Traces in a `stackgroup` will only fill to (or be filled to) other traces in the same group. With multiple `stackgroup`s or some traces stacked and some not, if fill-linked traces are not already consecutive, the later ones will be pushed down in the drawing order.  
   
 -   marker  
     Parent: data[type=scattersmith]  
@@ -667,86 +658,49 @@ type: 'scattersmith'
 
     - SELECTED CHILDREN REMOVED
   
-
-    connectgaps  
+-   connectgaps  
     Parent: data[type=scattersmith]  
     Type: boolean  
     Determines whether or not gaps (i.e. {nan} or missing values) in the provided data arrays are connected.  
   
-    fill  
-    Parent: data[type=scattersmith]  
-    Type: enumerated , one of ( "none" | "tozeroy" | "tozerox" | "tonexty" | "tonextx" | "toself" | "tonext" )  
-    Sets the area to fill with a solid color. Defaults to "none" unless this trace is stacked, then it gets "tonexty" ("tonextx") if `orientation` is "v" ("h") Use with `fillcolor` if not "none". "tozerox" and "tozeroy" fill to x=0 and y=0 respectively. "tonextx" and "tonexty" fill between the endpoints of this trace and the endpoints of the trace before it, connecting those endpoints with straight lines (to make a stacked area graph); if there is no trace before it, they behave like "tozerox" and "tozeroy". "toself" connects the endpoints of the trace (or each segment of the trace if it has gaps) into a closed shape. "tonext" fills the space between two traces if one completely encloses the other (eg consecutive contour lines), and behaves like "toself" if there is no trace before it. "tonext" should not be used if one trace does not enclose the other. Traces in a `stackgroup` will only fill to (or be filled to) other traces in the same group. With multiple `stackgroup`s or some traces stacked and some not, if fill-linked traces are not already consecutive, the later ones will be pushed down in the drawing order.  
-  
-    fillcolor  
-    Parent: data[type=scattersmith]  
-    Type: color  
-    Sets the fill color. Defaults to a half-transparent variant of the line color, marker color, or marker line color, whichever is available.  
-  
-    hoverlabel  
+-   hoverlabel  
     Parent: data[type=scattersmith]  
     Type: object containing one or more of the keys listed below.  
-    bgcolor  
-    Parent: data[type=scattersmith].hoverlabel  
-    Type: color or array of colors  
-    Sets the background color of the hover labels for this trace  
+
+    -   bgcolor  
+        Parent: data[type=scattersmith].hoverlabel  
+        Type: color or array of colors  
+        Sets the background color of the hover labels for this trace  
   
-    bordercolor  
-    Parent: data[type=scattersmith].hoverlabel  
-    Type: color or array of colors  
-    Sets the border color of the hover labels for this trace.  
+    -   bordercolor  
+        Parent: data[type=scattersmith].hoverlabel  
+        Type: color or array of colors  
+        Sets the border color of the hover labels for this trace.  
   
-    font  
-    Parent: data[type=scattersmith].hoverlabel  
-    Type: object containing one or more of the keys listed below.  
-    Sets the font used in hover labels.  
+    -   font  
+        Parent: data[type=scattersmith].hoverlabel  
+        Type: object containing one or more of the keys listed below.  
+        Sets the font used in hover labels.  
+
+        - FONT CHILDREN REMOVED
   
-    family  
-    Parent: data[type=scattersmith].hoverlabel.font  
-    Type: string or array of strings  
-    HTML font family - the typeface that will be applied by the web browser. The web browser will only be able to apply a font if it is available on the system which it operates. Provide multiple font families, separated by commas, to indicate the preference in which to apply fonts if they aren't available on the system. The plotly service (at https://plot.ly or on-premise) generates images on a server, where only a select number of fonts are installed and supported. These include "Arial", "Balto", "Courier New", "Droid Sans",, "Droid Serif", "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman".  
+    -   align  
+        Parent: data[type=scattersmith].hoverlabel  
+        Type: enumerated or array of enumerateds , one of ( "left" | "right" | "auto" )  
+        Default: "auto"  
+        Sets the horizontal alignment of the text content within hover label box. Has an effect only if the hover label text spans more two or more lines  
   
-    size  
-    Parent: data[type=scattersmith].hoverlabel.font  
-    Type: number or array of numbers greater than or equal to 1  
-    color  
-    Parent: data[type=scattersmith].hoverlabel.font  
-    Type: color or array of colors  
-    align  
-    Parent: data[type=scattersmith].hoverlabel  
-    Type: enumerated or array of enumerateds , one of ( "left" | "right" | "auto" )  
-    Default: "auto"  
-    Sets the horizontal alignment of the text content within hover label box. Has an effect only if the hover label text spans more two or more lines  
+    -   namelength  
+        Parent: data[type=scattersmith].hoverlabel  
+        Type: integer or array of integers greater than or equal to -1  
+        Default: 15  
+        Sets the default length (in number of characters) of the trace name in the hover labels for all traces. -1 shows the whole name regardless of length. 0-3 shows the first 0-3 characters, and an integer >3 will show the whole name if it is less than that many characters, but if it is longer, will truncate to `namelength - 3` characters and add an ellipsis.  
   
-    namelength  
-    Parent: data[type=scattersmith].hoverlabel  
-    Type: integer or array of integers greater than or equal to -1  
-    Default: 15  
-    Sets the default length (in number of characters) of the trace name in the hover labels for all traces. -1 shows the whole name regardless of length. 0-3 shows the first 0-3 characters, and an integer >3 will show the whole name if it is less than that many characters, but if it is longer, will truncate to `namelength - 3` characters and add an ellipsis.  
-  
-    hoveron  
-    Parent: data[type=scattersmith]  
-    Type: flaglist string. Any combination of "points", "fills" joined with a "+"  
-    Examples: "points", "fills", "points+fills"  
-    Do the hover effects highlight individual points (markers or line points) or do they highlight filled regions? If the fill is "toself" or "tonext" and there are no markers or text, then the default is "fills", otherwise it is "points".  
-  
-    stackgaps  
+-   stackgaps  
     Parent: data[type=scattersmith]  
     Type: enumerated , one of ( "infer zero" | "interpolate" )  
     Default: "infer zero"  
     Only relevant when `stackgroup` is used, and only the first `stackgaps` found in the `stackgroup` will be used - including if `visible` is "legendonly" but not if it is `false`. Determines how we handle locations at which other traces in this group have data but this one does not. With "infer zero" we insert a zero at these locations. With "interpolate" we linearly interpolate between existing values, and extrapolate a constant beyond the existing values.  
-  
-    xcalendar  
-    Parent: data[type=scattersmith]  
-    Type: enumerated , one of ( "gregorian" | "chinese" | "coptic" | "discworld" | "ethiopian" | "hebrew" | "islamic" | "julian" | "mayan" | "nanakshahi" | "nepali" | "persian" | "jalali" | "taiwan" | "thai" | "ummalqura" )  
-    Default: "gregorian"  
-    Sets the calendar system to use with `x` date data.  
-  
-    ycalendar  
-    Parent: data[type=scattersmith]  
-    Type: enumerated , one of ( "gregorian" | "chinese" | "coptic" | "discworld" | "ethiopian" | "hebrew" | "islamic" | "julian" | "mayan" | "nanakshahi" | "nepali" | "persian" | "jalali" | "taiwan" | "thai" | "ummalqura" )  
-    Default: "gregorian"  
-    Sets the calendar system to use with `y` date data.  
   
 -   uirevision  
     Parent: data[type=scattersmith]  
