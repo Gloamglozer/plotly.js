@@ -2,18 +2,20 @@
   
 [Smith charts](https://www.microwaves101.com/encyclopedias/smith-chart-basics#whats) are a graphical tool commonly used among microwave/RF engineers to map complex impedances into reflection coefficients.   
   
-This layout and trace pair should function very similarly to the cartesian layout and scatter trace.  I'm choosing cartesian over the polar layout as a starting point as the polar-style zoom isn't proper for a Smith chart, but will likely work in code from the polar layout  
+This layout and trace pair should function very similarly to the cartesian layout and scatter trace -- this API is adapted from the normal scatter trace type.
 
 Thoughts/Motivations on API design:
 -   S-parameters cannot simply be given in the scatter smith chart, as the smith chart which the trace is plotted to may define its own Z0 (reference impedance), which would call for a transformation if the trace contained S-parameters referenced to a different Z0. 
 -   User will be able to specify a list of impedances, admittances, or S-paramters (along with reference impedance)
--   Line interpolation should be linear w.r.t plotting environment (e.g. not interpolating impedances)
+-   Line interpolation should be linear on the smith chart (e.g. not interpolating impedances)
+
 
 Things I'm still figuring out:
+-   Will there be any problems with having an array of `math.Complex` as the input to the graph?  This made the most sense to me. 
 -   What is to be done about the colorbar positioning? given in x,y coordinates presently
     -   Just have fixed right for time being 
 -   What should be the behavior when the user specifies two of the possible trace types both a `z` and a `y`?
-    -   This could be fixed by having a `data` field (array of math.Complex), and a seperate `parameter` (`string`, one of ('z'|'y'|'s')) field, where you would put your data and then tell the trace what kind it is, e.g.:  
+    -   This could be fixed by having a `data` field (array of `math.Complex`), and a seperate `parameter` (`string`, one of ('z'|'y'|'s')) field, where you would put your data and then tell the trace what kind it is, e.g.:  
 
 ```javascript
 const { complex } = require('mathjs');
@@ -27,6 +29,85 @@ type: 'scattersmith'
   
 ## Scatter Smith  
   
+### Attributes that will be removed:
+  
+-   ~~x~~   
+  
+-   ~~x0~~  
+  
+-   ~~dx~~  
+  
+-   ~~y~~   
+  
+-   ~~y0~~  
+  
+-   ~~dy~~  
+
+-   ~~xaxis~~  
+
+-   ~~yaxis~~  
+
+-   ~~error_x~~
+
+-   ~~error_y~~
+
+-   ~~cliponaxis~~  
+
+-   ~~xcalendar~~   
+
+-   ~~ycalendar~~   
+
+-   ~~fill~~   
+
+-   ~~fillcolor~~   
+
+-   ~~hoveron~~ No fill option
+
+-   ~~orientation~~ 
+
+-   ~~groupnorm~~ 
+
+-   ~~stackgroup~~ 
+
+-   marker  
+
+    -   colorbar (Won't have x and y coordinates so will have to figure out a different system for positioning, can be fixed on right for initial development)
+
+        -   ~~x~~
+        
+        -   ~~xanchor~~
+        
+        -   ~~xpad~~
+        
+        -   ~~y~~  
+        
+        -   ~~yanchor~~
+        
+        -   ~~ypad~~  
+
+### Attributes to be added:
+  
+-   s  
+    Parent: data[type=scattersmith]  
+    Type: array of math.Complex objects  
+    An array of S-parameters.  Referenced to `z0` Ohms.  
+  
+-   z0  
+    Parent: data[type=scattersmith]  
+    Type: number  
+    Default: 50  
+    Resistance which `s` is referenced to.   
+
+-   z  
+    Parent: data[type=scattersmith]  
+    Type: array of math.Complex objects  
+    An array of non-normalized impedances, in Ohms.  
+
+-   y  
+    Parent: data[type=scattersmith]  
+    Type: array of math.Complex objects  
+    An array of non-normalized admittances, in Siemens (1/Ohms).  
+
 ### Attributes and functions which should be able to stay relatively unchanged / work the same way  
   
 -   type  
@@ -85,76 +166,11 @@ type: 'scattersmith'
     Default: "middle center"  
     Sets the positions of the `text` elements with respect to the impedance point.  
   
-### Attributes that will be removed or changed  
-  
--   ~~x~~   
-  
--   ~~x0~~  
-  
--   ~~dx~~  
-  
--   ~~y~~   
-  
--   ~~y0~~  
-  
--   ~~dy~~  
-
--   ~~xaxis~~  
-
--   ~~yaxis~~  
-
--   ~~error_x~~
-
--   ~~error_y~~
-
--   ~~cliponaxis~~  
-
--   ~~xcalendar~~   
-
--   ~~ycalendar~~   
-
--   ~~fill~~   
-
--   ~~fillcolor~~   
-
--   ~~hoveron~~ No fill option
-
--   ~~orientation~~ 
-
--   ~~groupnorm~~ 
-
--   ~~stackgroup~~ 
-
-### Attributes to be added  
-  
--   s  
-    Parent: data[type=scattersmith]  
-    Type: array of math.Complex objects  
-    An array of S-parameters.  Referenced to `z0` Ohms.  
-  
--   z0  
-    Parent: data[type=scattersmith]  
-    Type: number  
-    Default: 50  
-    Resistance which `s` is referenced to.   
-
--   z  
-    Parent: data[type=scattersmith]  
-    Type: array of math.Complex objects  
-    An array of non-normalized impedances, in Ohms.  
-
--   y  
-    Parent: data[type=scattersmith]  
-    Type: array of math.Complex objects  
-    An array of non-normalized admittances, in Siemens (1/Ohms).  
-  
-### Not yet looked at...   
-  
--   texttemplate  
+-   texttemplate    
     Parent: data[type=scattersmith]  
     Type: string or array of strings  
     Default: ""  
-    Template string used for rendering the information text that appear on points. Note that this will override `textinfo`. Variables are inserted using %{variable}, for example "z_im: %{z_im}". Numbers are formatted using d3-format's syntax %{variable:d3-format}, for example "Real Part: %{z_re:$.2f}". https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md#d3_format for details on the formatting syntax. Every attributes that can be specified per-point (the ones that are `arrayOk: true`) are available.  
+    Template string used for rendering the information text that appear on points. Note that this will override `textinfo`. Variables are inserted using %{variable}, for example "S: %{s}". Numbers are formatted using d3-format's syntax %{variable:d3-format}, for example "Impedance: %{z:$.2f} Ω". https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md#d3_format for details on the formatting syntax. Every attributes that can be specified per-point (the ones that are `arrayOk: true`) are available.  
   
 -   hovertext  
     Parent: data[type=scattersmith]  
@@ -164,8 +180,8 @@ type: 'scattersmith'
   
 -   hoverinfo  
     Parent: data[type=scattersmith]  
-    Type: flaglist string. Any combination of "z", "text", "name" joined with a "+" OR "all" or "none" or "skip".  
-    Examples:  "z", "all"  
+    Type: flaglist string. Any combination of "z","y","s", "text", "name" joined with a "+" OR "all" or "none" or "skip".  
+    Examples:  "z","z+s", "all"  
     Default: "all"  
     Determines which trace information appear on hover. If `none` or `skip` are set, no information is displayed upon hovering. But, if `none` is set, click and hover events are still fired.  
   
@@ -173,7 +189,7 @@ type: 'scattersmith'
     Parent: data[type=scattersmith]  
     Type: string or array of strings  
     Default: ""  
-    Template string used for rendering the information that appear on hover box. Note that this will override `hoverinfo`. Variables are inserted using %{variable}, for example "y: %{y}". Numbers are formatted using d3-format's syntax %{variable:d3-format}, for example "Price: %{y:$.2f}". https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md#d3_format for details on the formatting syntax. Dates are formatted using d3-time-format's syntax %{variable|d3-time-format}, for example "Day: %{2019-01-01|%A}". https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Formatting.md#format for details on the date formatting syntax. The variables available in `hovertemplate` are the ones emitted as event data described at this link https://plot.ly/javascript/plotlyjs-events/#event-data. Additionally, every attributes that can be specified per-point (the ones that are `arrayOk: true`) are available. Anything contained in tag `<extra>` is displayed in the secondary box, for example "<extra>{fullData.name}</extra>". To hide the secondary box completely, use an empty tag `<extra></extra>`.  
+    Template string used for rendering the information that appear on hover box. Note that this will override `hoverinfo`. Variables are inserted using %{variable}, for example "y: %{y}". Numbers are formatted using d3-format's syntax %{variable:d3-format}, for example "Admittance: %{y:$.2f} S". https://github.com/d3/d3-3.x-api-reference/blob/master/Formatting.md#d3_format for details on the formatting syntax. Dates are formatted using d3-time-format's syntax %{variable|d3-time-format}, for example "Day: %{2019-01-01|%A}". https://github.com/d3/d3-3.x-api-reference/blob/master/Time-Formatting.md#format for details on the date formatting syntax. The variables available in `hovertemplate` are the ones emitted as event data described at this link https://plot.ly/javascript/plotlyjs-events/#event-data. Additionally, every attributes that can be specified per-point (the ones that are `arrayOk: true`) are available. Anything contained in tag `<extra>` is displayed in the secondary box, for example "<extra>{fullData.name}</extra>". To hide the secondary box completely, use an empty tag `<extra></extra>`.  
   
 -   meta  
     Parent: data[type=scattersmith]  
@@ -375,42 +391,6 @@ type: 'scattersmith'
             Type: number greater than or equal to 0  
             Default: 1  
             Sets the length of the color bar This measure excludes the padding of both ends. That is, the color bar length is this length minus the padding on both ends.  
-        
-        -   x  
-            Parent: data[type=scattersmith].marker.colorbar  
-            Type: number between or equal to -2 and 3  
-            Default: 1.02  
-            Sets the x position of the color bar (in plot fraction).  
-        
-        -   xanchor  
-            Parent: data[type=scattersmith].marker.colorbar  
-            Type: enumerated , one of ( "left" | "center" | "right" )  
-            Default: "left"  
-            Sets this color bar's horizontal position anchor. This anchor binds the `x` position to the "left", "center" or "right" of the color bar.  
-        
-        -   xpad  
-            Parent: data[type=scattersmith].marker.colorbar  
-            Type: number greater than or equal to 0  
-            Default: 10  
-            Sets the amount of padding (in px) along the x direction.  
-        
-        -   y  
-            Parent: data[type=scattersmith].marker.colorbar  
-            Type: number between or equal to -2 and 3  
-            Default: 0.5  
-            Sets the y position of the color bar (in plot fraction).  
-        
-        -   yanchor  
-            Parent: data[type=scattersmith].marker.colorbar  
-            Type: enumerated , one of ( "top" | "middle" | "bottom" )  
-            Default: "middle"  
-            Sets this color bar's vertical position anchor This anchor binds the `y` position to the "top", "middle" or "bottom" of the color bar.  
-        
-        -   ypad  
-            Parent: data[type=scattersmith].marker.colorbar  
-            Type: number greater than or equal to 0  
-            Default: 10  
-            Sets the amount of padding (in px) along the y direction.  
         
         -   outlinecolor  
             Parent: data[type=scattersmith].marker.colorbar  
